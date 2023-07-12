@@ -3,17 +3,21 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Mood } from '../types';
 import { PressableArea } from './PressableArea';
 import { theme } from '../theme';
+import { MOODS } from '../constants';
 
-const MOODS: Mood[] = [
-  { emoji: '🧑‍💻', description: 'studious' },
-  { emoji: '🤔', description: 'pensive' },
-  { emoji: '😊', description: 'happy' },
-  { emoji: '🥳', description: 'celebratory' },
-  { emoji: '😤', description: 'frustrated' },
-];
+type MoodPickerProps = {
+  onChooseMood: (mood: Mood) => void;
+};
 
-export const MoodPicker: React.FC = () => {
+export const MoodPicker: React.FC<MoodPickerProps> = ({ onChooseMood }) => {
   const [selectedMood, setSelectedMood] = React.useState<Mood>();
+
+  const handleChoose = React.useCallback(() => {
+    if (selectedMood) {
+      onChooseMood(selectedMood);
+      setSelectedMood(undefined);
+    }
+  }, [onChooseMood, selectedMood]);
 
   return (
     <View style={styles.container}>
@@ -41,7 +45,7 @@ export const MoodPicker: React.FC = () => {
         ))}
       </View>
 
-      <PressableArea style={styles.button}>
+      <PressableArea style={styles.button} onPress={handleChoose}>
         <Text style={styles.buttonText}>Choose</Text>
       </PressableArea>
     </View>
