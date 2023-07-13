@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'space-between',
     height: 300,
+    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   heading: {
     fontSize: 20,
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textAlign: 'center',
     marginBottom: 20,
+    color: theme.colors.white,
   },
   button: {
     backgroundColor: theme.colors.purple,
