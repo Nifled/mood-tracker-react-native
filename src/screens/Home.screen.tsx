@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { MoodPicker } from '../components/MoodPicker';
-import { Mood, MoodWithTimestamp } from '../types';
-import { MoodItemRow } from '../components/MoodItemRow';
+import { Mood } from '../types';
+import { useAppContext } from '../App.provider';
 
 export const Home: React.FC = () => {
-  const [moodList, setMoodList] = React.useState<MoodWithTimestamp[]>([]);
+  const { setMoodList } = useAppContext();
 
   const handleChooseMood = React.useCallback((newMood: Mood) => {
     setMoodList(currentMoodList => [
@@ -17,10 +17,6 @@ export const Home: React.FC = () => {
   return (
     <View style={styles.container}>
       <MoodPicker onChooseMood={handleChooseMood} />
-
-      {moodList.map(item => (
-        <MoodItemRow item={item} />
-      ))}
     </View>
   );
 };
