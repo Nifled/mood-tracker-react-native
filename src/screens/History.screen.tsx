@@ -11,7 +11,7 @@ export const History: React.FC = () => {
       <Text>History</Text>
 
       {moodList.map(item => (
-        <MoodItemRow item={item} />
+        <MoodItemRow key={item.timestamp} item={item} />
       ))}
     </View>
   );

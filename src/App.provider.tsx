@@ -1,11 +1,30 @@
 import React from 'react';
-import { Mood, MoodWithTimestamp } from './types';
+import { AppContext, AppStorage, Mood, MoodWithTimestamp } from './types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type AppContext = {
-  greeting: string;
-  setGreeting: React.Dispatch<React.SetStateAction<string>>;
-  moodList: MoodWithTimestamp[];
-  setMoodList: React.Dispatch<React.SetStateAction<MoodWithTimestamp[]>>;
+// Get App data from `AsyncStorage`
+const storageKey = 'app-data';
+export const getAppStorage = async (): Promise<AppStorage | null> => {
+  try {
+    const data = await AsyncStorage.getItem(storageKey);
+
+    if (data) {
+      return JSON.parse(data);
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const setAppStorage = async (newData: AppStorage) => {
+  try {
+    AsyncStorage.setItem(storageKey, JSON.stringify(newData));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const defaultState: AppContext = {
@@ -22,6 +41,16 @@ export const AppProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [greeting, setGreeting] = React.useState('');
   const [moodList, setMoodList] = React.useState<MoodWithTimestamp[]>([]);
+
+  React.useEffect(() => {
+    (async () => {
+      const data = await getAppStorage();
+
+      if (data) {
+        setMoodList(data.moods);
+      }
+    })();
+  }, []);
 
   const providerValue: AppContext = {
     greeting,

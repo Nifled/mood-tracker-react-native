@@ -2,16 +2,23 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { MoodPicker } from '../components/MoodPicker';
 import { Mood } from '../types';
-import { useAppContext } from '../App.provider';
+import { setAppStorage, useAppContext } from '../App.provider';
 
 export const Home: React.FC = () => {
   const { setMoodList } = useAppContext();
 
   const handleChooseMood = React.useCallback((newMood: Mood) => {
-    setMoodList(currentMoodList => [
-      ...currentMoodList,
-      { mood: newMood, timestamp: Date.now() },
-    ]);
+    setMoodList(currentMoodList => {
+      const newMoodList = [
+        ...currentMoodList,
+        { mood: newMood, timestamp: Date.now() },
+      ];
+
+      // Save to `AsyncStorage`
+      setAppStorage({ moods: newMoodList });
+
+      return newMoodList;
+    });
   }, []);
 
   return (
