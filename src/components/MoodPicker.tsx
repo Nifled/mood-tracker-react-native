@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { Mood } from '../types';
 import { PressableArea } from './PressableArea';
 import { theme } from '../theme';
 import { MOODS } from '../constants';
+
+const butterfliesImageSrc = require('../assets/butterflies.png');
 
 type MoodPickerProps = {
   onChooseMood: (mood: Mood) => void;
@@ -11,13 +13,29 @@ type MoodPickerProps = {
 
 export const MoodPicker: React.FC<MoodPickerProps> = ({ onChooseMood }) => {
   const [selectedMood, setSelectedMood] = React.useState<Mood>();
+  const [hasSelected, setHasSelected] = React.useState(false);
 
   const handleChoose = React.useCallback(() => {
     if (selectedMood) {
       onChooseMood(selectedMood);
       setSelectedMood(undefined);
+      setHasSelected(true);
     }
   }, [onChooseMood, selectedMood]);
+
+  if (hasSelected) {
+    return (
+      <View style={styles.container}>
+        <Image source={butterfliesImageSrc} style={styles.image}></Image>
+
+        <PressableArea
+          style={styles.button}
+          onPress={() => setHasSelected(false)}>
+          <Text style={styles.buttonText}>Back</Text>
+        </PressableArea>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -85,6 +103,8 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     padding: 20,
+    justifyContent: 'space-between',
+    height: 300,
   },
   heading: {
     fontSize: 20,
@@ -105,5 +125,11 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  image: {
+    alignSelf: 'center',
+    height: 150,
+    width: 300,
+    resizeMode: 'contain',
   },
 });
